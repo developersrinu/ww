@@ -13,3 +13,21 @@ td {
     min-width: 80px;
     border: 1px solid #333;   
 }
+
+td:focus {
+    outline: none;
+    /* add your own color */
+}
+
+#italics-btn{
+    font-style: italic;
+}
+
+#bold-btn{
+    font-weight: 900;
+}
+
+#underline-btn{
+    font-weight: 900;
+    text-decoration: underline;
+}
