@@ -3,6 +3,18 @@ const tBody = document.getElementById('table-body');
 const boldButton=document.getElementById('bold-btn');
 const italicsButton = document.getElementById('italics-btn');
 const underlineButton = document.getElementById('underline-btn');
+const leftAlign = document.getElementById('left-align');
+const centerAlign = document.getElementById('center-align');
+const rightAlign = document.getElementById('right-align');
+const fontSizeDropDown = document.getElementById('font-size');
+const fontStyleDropDown = document.getElementById('font-style');
+const bgColorInput = document.getElementById('bgColor');
+const textColorInput = document.getElementById('textColor');
+const cutButton = document.getElementById('cut-button');
+const copyButton = document.getElementById('copy-button');
+const pasteButton = document.getElementById('paste-button');
+
+let cutCell = {};
 
 let currentCell;
 const columns = 26;
@@ -70,4 +82,64 @@ underlineButton.addEventListener('click',()=>{
     else currentCell.style.textDecoration='underline';
 })
 
-// sundays is very 
+leftAlign.addEventListener('click',()=>{
+    currentCell.style.textAlign = 'left';
+})
+
+rightAlign.addEventListener('click',()=>{
+    currentCell.style.textAlign = 'right';
+})
+
+centerAlign.addEventListener('click',()=>{
+    currentCell.style.textAlign = 'center';
+})
+
+fontSizeDropDown.addEventListener('change',()=>{
+    // what ever option tag is chosen by the end user is
+    // mapped with select tag with value attribute
+    currentCell.style.fontSize = fontSizeDropDown.value;
+})
+
+fontStyleDropDown.addEventListener('change',()=>{
+    // what ever option tag is chosen by the end user is
+    // mapped with select tag with value attribute
+    currentCell.style.fontFamily = fontStyleDropDown.value;
+})
+
+// see the diff between input and change
+
+textColorInput.addEventListener('input',()=>{
+    currentCell.style.color = textColorInput.value;
+})
+
+
+bgColorInput.addEventListener('change',()=>{
+    currentCell.style.backgroundColor = bgColorInput.value;
+})
+
+
+cutButton.addEventListener('click',()=>{
+    cutCell={
+        style: currentCell.style.cssText,
+        text: currentCell.innerText,
+    }
+    currentCell.innerText='';
+    currentCell.style.cssText='';
+})
+
+copyButton.addEventListener('click',()=>{
+    cutCell={
+        style: currentCell.style.cssText,
+        text: currentCell.innerText,
+    }
+    // I don't need to delete anything here
+    // currentCell.innerText='';
+    // currentCell.style.cssText='';
+})
+
+pasteButton.addEventListener('click',()=>{
+    currentCell.innerText=cutCell.text;
+    currentCell.style.cssText=cutCell.style;
+})
+
+// 14 -> 22 (you triggered a change event)
