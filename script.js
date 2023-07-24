@@ -182,3 +182,9 @@ pasteButton.addEventListener('click',()=>{
 // constant operation
 // 2d matrix
 
+// both the contest discussion
+// promises extra class
+// call apply & bind
+
+// 7:45 is doubt time
+// kudos to Diptendu
