@@ -47,6 +47,16 @@ for (let row = 1; row <= rows; row++) { // Row -> 1-100
     tBody.append(tr);
 }
 
+// forming of outer array
+let matrix = new Array(rows);
+// let matrix=[];
+for(let row=0;row<rows;row++){
+    matrix[row]= new Array(columns);
+    for(col=0;col<columns;col++){
+        matrix[row][col]={};
+    }
+}
+
 function onFocusFn(event){
     currentCell=event.target;
     document.getElementById('current-cell').innerText=currentCell.id;
@@ -143,3 +153,32 @@ pasteButton.addEventListener('click',()=>{
 })
 
 // 14 -> 22 (you triggered a change event)
+
+// [ 
+//  [{},{}],
+//  [{},{}],
+//  [{},{}],
+// ]
+
+// A2
+
+// 1st row, col -> 0th
+
+// A2 -> 1,0
+// let row=id.substring(1); // 2
+// let col=id[0]; // 'A' -> 65
+// twoDArray[1][0]
+
+
+// user clicks on download button.
+// row * col
+// 1st -> you traverse over table -> copy evey cell
+// and then give that 2d matrix to the download
+
+// constant
+// 2nd -> you give the matrix
+// when user is editing 
+
+// constant operation
+// 2d matrix
+
