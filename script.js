@@ -13,6 +13,8 @@ const textColorInput = document.getElementById('textColor');
 const cutButton = document.getElementById('cut-button');
 const copyButton = document.getElementById('copy-button');
 const pasteButton = document.getElementById('paste-button');
+const uploadJsonFile = document.getElementById('jsonFile');
+
 
 let cutCell = {};
 
@@ -216,7 +218,8 @@ function downloadJson() {
     link.click();
     document.body.removeChild(link);
 }
-
+// visible table -> virtual memory
+// virtual memory -> phyical table
 
 // 14 -> 22 (you triggered a change event)
 
@@ -262,3 +265,51 @@ function downloadJson() {
 
 // cell -> event triggred -> function updateCell(id,content)
 // content -> cell text and style
+// 
+
+// input and change they will work same in this event
+uploadJsonFile.addEventListener('change',uploadJSONFileFn);
+
+
+//   let tempObj = {
+//     style: currentCell.style.cssText,
+//     text: currentCell.innerText,
+//     id: currentCell.id,
+// }
+
+function uploadJSONFileFn(event){
+    const file = event.target.files[0];
+    if(file){
+        // this can read external file
+        const reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = function(e){
+            const fileContent = e.target.result;
+            try{
+                // updated my matrix
+                matrix = JSON.parse(fileContent);
+                matrix.forEach(row => {
+                    row.forEach(cell=>{
+                        if(cell.id){
+                            let cellToBeEdtited=document.getElementById(cell.id);
+                            cellToBeEdtited.innerText=cell.text;
+                            cellToBeEdtited.style.cssText=cell.style;
+                        }
+                        // else empty object-> do nothing
+                    })
+                })
+            }
+            catch(err){
+                console.log(err);
+            }
+        }
+        // how you you trigger reader?
+        // .readAsText method will trigger reader
+        // .onload method is having my default function
+    }
+}
+
+
+// uploading a JSON file
+// matrix
+// table
