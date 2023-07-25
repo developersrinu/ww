@@ -1,6 +1,6 @@
 const tHeadRow = document.getElementById('table-heading-row');
 const tBody = document.getElementById('table-body');
-const boldButton=document.getElementById('bold-btn');
+const boldButton = document.getElementById('bold-btn');
 const italicsButton = document.getElementById('italics-btn');
 const underlineButton = document.getElementById('underline-btn');
 const leftAlign = document.getElementById('left-align');
@@ -23,29 +23,29 @@ const rows = 100;
 for (let col = 0; col < columns; col++) {
     let th = document.createElement('th');
     // col -> 0 
-    th.innerText= String.fromCharCode(col+65);
+    th.innerText = String.fromCharCode(col + 65);
     tHeadRow.append(th);
 }
 
 for (let row = 1; row <= rows; row++) { // Row -> 1-100
     // i create a tr
-    let tr=document.createElement('tr');
+    let tr = document.createElement('tr');
     // number cell
-    let th= document.createElement('th');
+    let th = document.createElement('th');
     // injecting number in th
-    th.innerText=row;
+    th.innerText = row;
     tr.append(th);
-    for(let col=0;col<columns;col++){ //COL-> 0->26 // A->Z
+    for (let col = 0; col < columns; col++) { //COL-> 0->26 // A->Z
         let td = document.createElement('td');
-        td.setAttribute('contenteditable','true');
+        td.setAttribute('contenteditable', 'true');
         // unique row and unique col
         // ColRow
-        td.setAttribute('id',`${String.fromCharCode(col+65)}${row}`);
+        td.setAttribute('id', `${String.fromCharCode(col + 65)}${row}`);
         // this event will revolve around input
-        td.addEventListener('input',(event)=>onInputFn(event));
+        td.addEventListener('input', (event) => onInputFn(event));
 
         // this event revolves around focus on a cell
-        td.addEventListener('focus',(event)=>onFocusFn(event));
+        td.addEventListener('focus', (event) => onFocusFn(event));
         tr.append(td);
     }
     tBody.append(tr);
@@ -54,14 +54,14 @@ for (let row = 1; row <= rows; row++) { // Row -> 1-100
 // forming of outer array
 let matrix = new Array(rows);
 // let matrix=[];
-for(let row=0;row<rows;row++){
-    matrix[row]= new Array(columns);
-    for(col=0;col<columns;col++){
-        matrix[row][col]={};
+for (let row = 0; row < rows; row++) {
+    matrix[row] = new Array(columns);
+    for (col = 0; col < columns; col++) {
+        matrix[row][col] = {};
     }
 }
 
-function onInputFn(event){
+function onInputFn(event) {
     updateMatrix(event.target);
     // console.log(event.target);
     // id
@@ -69,7 +69,7 @@ function onInputFn(event){
     // cell style -> cssText
 }
 
-function updateMatrix(currentCell){
+function updateMatrix(currentCell) {
     let tempObj = {
         style: currentCell.style.cssText,
         text: currentCell.innerText,
@@ -77,79 +77,79 @@ function updateMatrix(currentCell){
     }
     // A1, A2, B6
     // `${j}${i}`
-    let j = currentCell.id[0].charCodeAt(0)-65; /// this is col
+    let j = currentCell.id[0].charCodeAt(0) - 65; /// this is col
     // currentCell.id[0] -> this will give me character
     // str.chatCodeAt(i) will give me respective ascii at ith index of string str
     // -65 for making ascii code to 0th index
-    let i = currentCell.id.substr(1)-1;
-    matrix[i][j]=tempObj;
+    let i = currentCell.id.substr(1) - 1;
+    matrix[i][j] = tempObj;
     // console.log(matrix);
 }
 
-function onFocusFn(event){
-    currentCell=event.target;
-    document.getElementById('current-cell').innerText=currentCell.id;
-    if(currentCell.style.fontWeight==='bold'){
-        boldButton.style.backgroundColor='yellow';
+function onFocusFn(event) {
+    currentCell = event.target;
+    document.getElementById('current-cell').innerText = currentCell.id;
+    if (currentCell.style.fontWeight === 'bold') {
+        boldButton.style.backgroundColor = 'yellow';
     }
-    else boldButton.style.backgroundColor='transparent';
+    else boldButton.style.backgroundColor = 'transparent';
 }
 
-boldButton.addEventListener('click',()=>{
-    if(currentCell.style.fontWeight==='bold'){
-        currentCell.style.fontWeight='normal';
+boldButton.addEventListener('click', () => {
+    if (currentCell.style.fontWeight === 'bold') {
+        currentCell.style.fontWeight = 'normal';
     }
     else {
-        currentCell.style.fontWeight='bold';
-        boldButton.style.backgroundColor='yellow';
+        currentCell.style.fontWeight = 'bold';
+        boldButton.style.backgroundColor = 'yellow';
     }
     // latest style should be passed to updated matrix
     updateMatrix(currentCell);
     // currentCell.style.fontWeight = currentCell.style.fontWeight==='bold'? 'normal':'bold';
 })
 
-italicsButton.addEventListener('click',()=>{
-    if(currentCell.style.fontStyle==='italic'){
-        currentCell.style.fontStyle='normal';
+italicsButton.addEventListener('click', () => {
+    if (currentCell.style.fontStyle === 'italic') {
+        currentCell.style.fontStyle = 'normal';
     }
-    else currentCell.style.fontStyle='italic';
+    else currentCell.style.fontStyle = 'italic';
 
     updateMatrix(currentCell);
 })
 
-underlineButton.addEventListener('click',()=>{
-    if(currentCell.style.textDecoration==='underline'){
-        currentCell.style.textDecoration='none';
+underlineButton.addEventListener('click', () => {
+    if (currentCell.style.textDecoration === 'underline') {
+        currentCell.style.textDecoration = 'none';
     }
-    else currentCell.style.textDecoration='underline';
+    else currentCell.style.textDecoration = 'underline';
 
     updateMatrix(currentCell);
 })
 
-leftAlign.addEventListener('click',()=>{
+leftAlign.addEventListener('click', () => {
     currentCell.style.textAlign = 'left';
     updateMatrix(currentCell);
 })
 
-rightAlign.addEventListener('click',()=>{
+rightAlign.addEventListener('click', () => {
     currentCell.style.textAlign = 'right';
     updateMatrix(currentCell);
 })
 
-centerAlign.addEventListener('click',()=>{
+centerAlign.addEventListener('click', () => {
     currentCell.style.textAlign = 'center'; /// changing style of a particular cell in 
     // table
     updateMatrix(currentCell);
 })
 
-fontSizeDropDown.addEventListener('change',()=>{
+fontSizeDropDown.addEventListener('change', () => {
     // what ever option tag is chosen by the end user is
     // mapped with select tag with value attribute
     currentCell.style.fontSize = fontSizeDropDown.value;
     updateMatrix(currentCell);
 })
 
-fontStyleDropDown.addEventListener('change',()=>{
+fontStyleDropDown.addEventListener('change', () => {
     // what ever option tag is chosen by the end user is
     // mapped with select tag with value attribute
     currentCell.style.fontFamily = fontStyleDropDown.value;
@@ -158,30 +158,30 @@ fontStyleDropDown.addEventListener('change',()=>{
 
 // see the diff between input and change
 
-textColorInput.addEventListener('input',()=>{
+textColorInput.addEventListener('input', () => {
     currentCell.style.color = textColorInput.value;
     updateMatrix(currentCell);
 })
 
 
-bgColorInput.addEventListener('change',()=>{
+bgColorInput.addEventListener('change', () => {
     currentCell.style.backgroundColor = bgColorInput.value;
     updateMatrix(currentCell);
 })
 
 
-cutButton.addEventListener('click',()=>{
-    cutCell={
+cutButton.addEventListener('click', () => {
+    cutCell = {
         style: currentCell.style.cssText,
         text: currentCell.innerText,
     }
-    currentCell.innerText='';
-    currentCell.style.cssText='';
+    currentCell.innerText = '';
+    currentCell.style.cssText = '';
     updateMatrix(currentCell);
 })
 
-copyButton.addEventListener('click',()=>{
-    cutCell={
+copyButton.addEventListener('click', () => {
+    cutCell = {
         style: currentCell.style.cssText,
         text: currentCell.innerText,
     }
@@ -190,25 +190,28 @@ copyButton.addEventListener('click',()=>{
     // currentCell.style.cssText='';
 })
 
-pasteButton.addEventListener('click',()=>{
-    currentCell.innerText=cutCell.text;
-    currentCell.style.cssText=cutCell.style;
+pasteButton.addEventListener('click', () => {
+    currentCell.innerText = cutCell.text;
+    currentCell.style.cssText = cutCell.style;
     updateMatrix(currentCell);
 })
 
-function downloadJson(){
+function downloadJson() {
     // 2d matrix into string
     const matrixString = JSON.stringify(matrix);
 
     // text form of matrix -> piece of memory (downloadable)
     // application/json -> format for json
-    const blob = new Blob([matrixString],{type:'application/json'});
+    const blob = new Blob([matrixString], { type: 'application/json' });
     // link created -> attach href
     // click link
     // delete link
     const link = document.createElement('a');
     // 211 -> converting piece of memory to downloadable link
     link.href = URL.createObjectURL(blob);
+    // download the link instead of opening it
+    // link.download -> file name
+    link.download = 'table.json';
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
