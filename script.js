@@ -14,13 +14,76 @@ const cutButton = document.getElementById('cut-button');
 const copyButton = document.getElementById('copy-button');
 const pasteButton = document.getElementById('paste-button');
 const uploadJsonFile = document.getElementById('jsonFile');
-
+const addSheetButton = document.getElementById('add-sheet-button');
+const buttonContainer = document.getElementById('button-container');
+const sheetNo = document.getElementById('sheet-no');
+const arrMatrix = 'arrMatrix';
 
 let cutCell = {};
+let numSheets = 1;
+let currSheetNum = 1;
 
 let currentCell;
 const columns = 26;
 const rows = 100;
+
+// `arrMatrix` - [matrix1,matrix2,matrix3]
+
+addSheetButton.addEventListener('click', () => {
+    const btn = document.createElement('button');
+    numSheets++;
+    currSheetNum = numSheets;
+    btn.innerText = `Sheet ${numSheets}`;
+    btn.setAttribute('id', `sheet-${currSheetNum}`);
+    btn.setAttribute('onclick', 'viewSheet(event)');
+    buttonContainer.append(btn);
+    if (localStorage.getItem(arrMatrix)) {
+        var oldMatrixArr = localStorage.getItem(arrMatrix);
+        // oldMatrixArr -> string
+        var newMatrixArr = [...JSON.parse(oldMatrixArr), matrix];
+        localStorage.setItem(arrMatrix, JSON.stringify(newMatrixArr));
+    } else {
+        let tempMatrixArr = [matrix];
+        localStorage.setItem(arrMatrix, JSON.stringify(tempMatrixArr));
+    }
+
+    // cleanup my virtual memory
+    for (let row = 0; row < rows; row++) {
+        matrix[row] = new Array(columns);
+        for (let col = 0; col < columns; col++) {
+            matrix[row][col] = {};
+        }
+    }
+    sheetNo.innerText = "Sheet No - " + currSheetNum;
+    tBody.innerHTML = ``;
+    // repeated Code please make function (DIY)
+    for (let row = 1; row <= rows; row++) { // Row -> 1-100
+        // i create a tr
+        let tr = document.createElement('tr');
+        // number cell
+        let th = document.createElement('th');
+        // injecting number in th
+        th.innerText = row;
+        tr.append(th);
+        for (let col = 0; col < columns; col++) { //COL-> 0->26 // A->Z
+            let td = document.createElement('td');
+            td.setAttribute('contenteditable', 'true');
+            // unique row and unique col
+            // ColRow
+            td.setAttribute('id', `${String.fromCharCode(col + 65)}${row}`);
+            // this event will revolve around input
+            td.addEventListener('input', (event) => onInputFn(event));
+
+            // this event revolves around focus on a cell
+            td.addEventListener('focus', (event) => onFocusFn(event));
+            tr.append(td);
+        }
+        tBody.append(tr);
+    }
+
+})
+
+
 
 for (let col = 0; col < columns; col++) {
     let th = document.createElement('th');
@@ -268,7 +331,7 @@ function downloadJson() {
 // 
 
 // input and change they will work same in this event
-uploadJsonFile.addEventListener('change',uploadJSONFileFn);
+uploadJsonFile.addEventListener('change', uploadJSONFileFn);
 
 
 //   let tempObj = {
@@ -277,29 +340,29 @@ uploadJsonFile.addEventListener('change',uploadJSONFileFn);
 //     id: currentCell.id,
 // }
 
-function uploadJSONFileFn(event){
+function uploadJSONFileFn(event) {
     const file = event.target.files[0];
-    if(file){
+    if (file) {
         // this can read external file
         const reader = new FileReader();
         reader.readAsText(file);
-        reader.onload = function(e){
+        reader.onload = function (e) {
             const fileContent = e.target.result;
-            try{
+            try {
                 // updated my matrix
                 matrix = JSON.parse(fileContent);
                 matrix.forEach(row => {
-                    row.forEach(cell=>{
-                        if(cell.id){
-                            let cellToBeEdtited=document.getElementById(cell.id);
-                            cellToBeEdtited.innerText=cell.text;
-                            cellToBeEdtited.style.cssText=cell.style;
+                    row.forEach(cell => {
+                        if (cell.id) {
+                            let cellToBeEdtited = document.getElementById(cell.id);
+                            cellToBeEdtited.innerText = cell.text;
+                            cellToBeEdtited.style.cssText = cell.style;
                         }
                         // else empty object-> do nothing
                     })
                 })
             }
-            catch(err){
+            catch (err) {
                 console.log(err);
             }
         }
@@ -313,3 +376,47 @@ function uploadJSONFileFn(event){
 // uploading a JSON file
 // matrix
 // table
+
+function viewSheet(event) {
+    let id = event.target.id.split('-')[1];
+    var matrixArr = JSON.parse(localStorage.getItem(arrMatrix));
+    matrix = matrixArr[id - 1];
+    // current matrix points towards the latest currentSheet;
+    // clean previousTable
+    tBody.innerHTML = ``;
+    // repeated Code please make function (DIY)
+    for (let row = 1; row <= rows; row++) { // Row -> 1-100
+        // i create a tr
+        let tr = document.createElement('tr');
+        // number cell
+        let th = document.createElement('th');
+        // injecting number in th
+        th.innerText = row;
+        tr.append(th);
+        for (let col = 0; col < columns; col++) { //COL-> 0->26 // A->Z
+            let td = document.createElement('td');
+            td.setAttribute('contenteditable', 'true');
+            // unique row and unique col
+            // ColRow
+            td.setAttribute('id', `${String.fromCharCode(col + 65)}${row}`);
+            // this event will revolve around input
+            td.addEventListener('input', (event) => onInputFn(event));
+
+            // this event revolves around focus on a cell
+            td.addEventListener('focus', (event) => onFocusFn(event));
+            tr.append(td);
+        }
+        tBody.append(tr);
+    }
+    matrix.forEach(row => {
+        row.forEach(cell => {
+            if (cell.id) {
+                var myCell = document.getElementById(cell.id);
+                myCell.innerText = cell.text;
+                myCell.style.cssText = cell.style;
+            }
+        })
+    })
+    currSheetNum=id;
+    sheetNo.innerText = "Sheet No - " + currSheetNum;
+}
